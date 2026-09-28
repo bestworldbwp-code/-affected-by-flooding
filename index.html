@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>แจ้งหยุดงานน้ำท่วม</title>
+<meta name="description" content="แบบแจ้งหยุดงานเนื่องจากอุทกภัย พร้อมแนบรูปหลักฐาน">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">ฝ่ายบุคคล · แบบฟอร์ม HR-FL01</div>
+    <h1>แบบแจ้งหยุดงานเนื่องจากอุทกภัย</h1>
+    <p class="lead">กรอกข้อมูลและแนบรูปถ่ายเป็นหลักฐาน เช่น สภาพน้ำท่วมบ้านหรือเส้นทางที่ใช้เดินทาง เมื่อส่งแล้วจะได้เลขคำขอไว้ตรวจสอบสถานะ</p>
+    <div class="tide" aria-hidden="true"></div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-view="form">แจ้งหยุดงาน</button>
+    <button role="tab" aria-selected="false" data-view="status">ตรวจสอบสถานะ</button>
+  </nav>
+
+  <!-- ===== FORM ===== -->
+  <section id="view-form">
+    <form id="leaveForm" novalidate>
+      <fieldset>
+        <legend>ข้อมูลพนักงาน</legend>
+        <div class="grid2">
+          <label class="field"><span class="req">ชื่อ-นามสกุล</span><input type="text" id="f-name" autocomplete="name" placeholder="เช่น สมหญิง ใจดี" maxlength="120"></label>
+          <label class="field"><span class="req">รหัสพนักงาน</span><input type="text" id="f-emp" placeholder="เช่น EMP-0421" maxlength="40"></label>
+          <label class="field"><span class="req">แผนก / ฝ่าย</span><input type="text" id="f-dept" placeholder="เช่น ฝ่ายผลิต สาย 2" maxlength="120"></label>
+          <label class="field"><span class="req">เบอร์โทรที่ติดต่อได้</span><input type="tel" id="f-phone" inputmode="tel" autocomplete="tel" placeholder="08x-xxx-xxxx" maxlength="30"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>วันที่หยุดงาน</legend>
+        <div class="grid2">
+          <label class="field"><span class="req">ตั้งแต่วันที่</span><input type="date" id="f-from"></label>
+          <label class="field"><span class="req">ถึงวันที่</span><input type="date" id="f-to"></label>
+        </div>
+        <div class="hint">รวม <span class="days" id="daysOut">–</span> วัน (นับรวมวันแรกและวันสุดท้าย)</div>
+      </fieldset>
+
+      <fieldset>
+        <legend>สาเหตุที่ต้องหยุดงาน</legend>
+        <div class="label req">เลือกได้มากกว่า 1 ข้อ</div>
+        <div class="chips" id="causes">
+          <label class="chip"><input type="checkbox" value="น้ำท่วมบ้าน/ที่พักอาศัย">น้ำท่วมบ้าน/ที่พักอาศัย</label>
+          <label class="chip"><input type="checkbox" value="เส้นทางถูกตัดขาด เดินทางไม่ได้">เส้นทางถูกตัดขาด เดินทางไม่ได้</label>
+          <label class="chip"><input type="checkbox" value="ต้องอพยพ/ดูแลครอบครัว">ต้องอพยพ/ดูแลครอบครัว</label>
+          <label class="chip"><input type="checkbox" value="ขนย้าย/ซ่อมแซมทรัพย์สิน">ขนย้าย/ซ่อมแซมทรัพย์สิน</label>
+          <label class="chip"><input type="checkbox" value="ยานพาหนะเสียหาย">ยานพาหนะเสียหาย</label>
+          <label class="chip"><input type="checkbox" value="เจ็บป่วยจากน้ำท่วม">เจ็บป่วยจากน้ำท่วม</label>
+          <label class="chip"><input type="checkbox" value="อื่นๆ">อื่นๆ</label>
+        </div>
+        <label class="field"><span class="req">อธิบายสถานการณ์</span>
+          <textarea id="f-detail" maxlength="2000" placeholder="เช่น น้ำเข้าบ้านตั้งแต่คืนวันที่ 26 ต้องย้ายของขึ้นชั้นสอง ถนนหน้าหมู่บ้านรถเล็กผ่านไม่ได้"></textarea>
+        </label>
+        <label class="field"><span class="req">พื้นที่ที่ประสบภัย</span>
+          <input type="text" id="f-area" maxlength="200" placeholder="หมู่บ้าน / ตำบล / อำเภอ / จังหวัด">
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>ระดับน้ำโดยประมาณ</legend>
+        <div class="gauge">
+          <div class="staff" aria-hidden="true"><div class="fill" id="staffFill"></div></div>
+          <div class="levels">
+            <label class="lvl"><input type="radio" name="lvl" value="มิดศีรษะ / ชั้นหนึ่งจมน้ำ" data-h="100"><span>มิดศีรษะ / ชั้นหนึ่งจมน้ำ</span><small>&gt;180 ซม.</small></label>
+            <label class="lvl"><input type="radio" name="lvl" value="ระดับอก" data-h="75"><span>ระดับอก</span><small>~120 ซม.</small></label>
+            <label class="lvl"><input type="radio" name="lvl" value="ระดับเอว" data-h="55"><span>ระดับเอว</span><small>~90 ซม.</small></label>
+            <label class="lvl"><input type="radio" name="lvl" value="ระดับเข่า" data-h="32"><span>ระดับเข่า</span><small>~50 ซม.</small></label>
+            <label class="lvl"><input type="radio" name="lvl" value="ระดับข้อเท้า" data-h="12"><span>ระดับข้อเท้า</span><small>~15 ซม.</small></label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>รูปถ่ายหลักฐาน</legend>
+        <label class="drop" id="drop" for="f-photos">
+          <strong>แตะเพื่อถ่ายรูปหรือเลือกรูป</strong>
+          <span class="hint">อย่างน้อย 1 รูป สูงสุด 6 รูป · ระบบจะย่อขนาดให้อัตโนมัติ</span>
+        </label>
+        <input type="file" id="f-photos" accept="image/*" multiple hidden>
+        <div class="thumbs" id="thumbs"></div>
+      </fieldset>
+
+      <label class="confirm"><input type="checkbox" id="f-confirm"><span>ข้าพเจ้าขอรับรองว่าข้อมูลและรูปถ่ายข้างต้นเป็นความจริง และยินยอมให้ฝ่ายบุคคลใช้ข้อมูลนี้เพื่อพิจารณาการหยุดงาน</span></label>
+
+      <div id="formMsg" class="msg err" hidden></div>
+      <div class="progress" id="prog" hidden><i id="progBar"></i></div>
+      <div class="actions">
+        <button class="btn" type="submit" id="submitBtn">ส่งคำขอ</button>
+        <button class="btn ghost" type="button" id="resetBtn">ล้างแบบฟอร์ม</button>
+      </div>
+    </form>
+
+    <div class="receipt" id="receipt" hidden>
+      <div class="eyebrow">ส่งคำขอเรียบร้อย</div>
+      <div>เลขคำขอของคุณ</div>
+      <div class="code" id="rcCode"></div>
+      <div class="hint" id="rcInfo"></div>
+      <div class="hint">จดหรือแคปหน้าจอเลขนี้ไว้ ใช้คู่กับรหัสพนักงานเพื่อตรวจสอบสถานะ</div>
+      <div class="actions" style="justify-content:center">
+        <button class="btn ghost" type="button" id="copyCode">คัดลอกเลขคำขอ</button>
+        <button class="btn" type="button" id="newReq">แจ้งคำขอใหม่</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATUS ===== -->
+  <section id="view-status" hidden>
+    <form id="statusForm" class="card" novalidate>
+      <h2>ตรวจสอบสถานะคำขอ</h2>
+      <div class="grid2">
+        <label class="field"><span class="req">เลขคำขอ</span><input type="text" id="s-ref" placeholder="เช่น FL-7K3Q9M" autocapitalize="characters"></label>
+        <label class="field"><span class="req">รหัสพนักงาน</span><input type="text" id="s-emp"></label>
+      </div>
+      <div class="actions"><button class="btn" type="submit">ตรวจสอบ</button></div>
+      <div id="statusOut"></div>
+    </form>
+    <div id="recentWrap" hidden style="margin-top:20px">
+      <div class="label" style="margin-bottom:8px">คำขอที่ส่งจากเครื่องนี้</div>
+      <div class="list" id="recentList"></div>
+    </div>
+  </section>
+
+  <footer class="foot"><a href="admin.html">สำหรับฝ่ายบุคคล</a></footer>
+</div>
+
+<div class="lightbox" id="lightbox" hidden><img id="lbImg" alt="รูปหลักฐานขนาดเต็ม"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const C = window.APP_CONFIG;
+const sb = supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY, {auth:{persistSession:false}});
+const MAX_PHOTOS = 6;
+const STATUS = {pending:"รอตรวจสอบ", approved:"อนุมัติ", rejected:"ไม่อนุมัติ"};
+let photos = []; // {blob, url, size}
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const thDate = iso => iso ? new Date(iso + (iso.length===10 ? "T00:00:00" : "")).toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"}) : "–";
+function dayCount(a,b){ if(!a||!b) return 0; const d=(new Date(b)-new Date(a))/864e5; return d>=0 ? d+1 : 0; }
+function refCode(){
+  const A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", r = crypto.getRandomValues(new Uint8Array(6));
+  return "FL-" + [...r].map(x => A[x % A.length]).join("");
+}
+const store = {
+  get(k, d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* tabs */
+function setView(v){
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view===v)));
+  $("#view-form").hidden = v!=="form"; $("#view-status").hidden = v!=="status";
+  if(v==="status") renderRecent();
+}
+document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+
+/* form behaviour */
+function updateDays(){ $("#daysOut").textContent = dayCount($("#f-from").value, $("#f-to").value) || "–"; }
+$("#f-from").addEventListener("change", () => { if(!$("#f-to").value || $("#f-to").value < $("#f-from").value) $("#f-to").value = $("#f-from").value; updateDays(); });
+$("#f-to").addEventListener("change", updateDays);
+document.querySelectorAll('input[name="lvl"]').forEach(r => r.addEventListener("change", () => $("#staffFill").style.height = r.dataset.h + "%"));
+
+const PROFILE = ["f-name","f-emp","f-dept","f-phone"];
+const prof = store.get("flood-leave-profile", {});
+PROFILE.forEach(k => { if(prof[k]) $("#"+k).value = prof[k]; });
+if(prof["f-emp"]) $("#s-emp").value = prof["f-emp"];
+function saveProfile(){ const d={}; PROFILE.forEach(k => d[k] = $("#"+k).value.trim()); store.set("flood-leave-profile", d); }
+
+/* photos */
+function loadImage(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); res(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("decode")); };
+    img.src = url;
+  });
+}
+async function compress(file){
+  const img = await loadImage(file);
+  let max = 1600, q = 0.78, blob = null;
+  for(let i=0;i<6;i++){
+    const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement("canvas");
+    c.width = Math.round(img.naturalWidth*s); c.height = Math.round(img.naturalHeight*s);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    blob = await new Promise(r => c.toBlob(r, "image/jpeg", q));
+    if(blob && blob.size <= 900*1024) return blob;
+    q = Math.max(0.5, q - 0.1); max = Math.round(max*0.85);
+  }
+  return blob;
+}
+async function addFiles(list){
+  const msg = $("#formMsg"); msg.hidden = true;
+  for(const f of [...list]){
+    if(photos.length >= MAX_PHOTOS){ msg.textContent = `แนบได้สูงสุด ${MAX_PHOTOS} รูป`; msg.hidden = false; break; }
+    try{
+      const blob = await compress(f);
+      photos.push({blob, url: URL.createObjectURL(blob), size: Math.round(blob.size/1024)});
+    }catch(e){
+      msg.textContent = `เปิดไฟล์ “${f.name}” ไม่ได้ ถ้าเป็นไฟล์ HEIC ให้แคปหน้าจอรูปนั้นแล้วแนบใหม่ หรือถ่ายรูปผ่านปุ่มด้านบนโดยตรง`;
+      msg.hidden = false;
+    }
+  }
+  renderThumbs();
+}
+function renderThumbs(){
+  $("#thumbs").innerHTML = photos.map((p,i) => `<div class="thumb"><img src="${p.url}" alt="รูปหลักฐาน ${i+1}" data-lb><span class="sz">${p.size} KB</span><button type="button" data-rm="${i}" aria-label="ลบรูปที่ ${i+1}">✕</button></div>`).join("");
+}
+$("#thumbs").addEventListener("click", e => { const i = e.target.dataset.rm; if(i!==undefined){ URL.revokeObjectURL(photos[+i].url); photos.splice(+i,1); renderThumbs(); } });
+$("#f-photos").addEventListener("change", e => { addFiles(e.target.files); e.target.value = ""; });
+const drop = $("#drop");
+["dragenter","dragover"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave","drop"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => addFiles(e.dataTransfer.files));
+
+document.addEventListener("click", e => { if(e.target.matches("img[data-lb]")){ $("#lbImg").src = e.target.src; $("#lightbox").hidden = false; } });
+$("#lightbox").addEventListener("click", () => $("#lightbox").hidden = true);
+document.addEventListener("keydown", e => { if(e.key==="Escape") $("#lightbox").hidden = true; });
+
+function resetForm(){
+  ["f-from","f-to","f-detail","f-area"].forEach(k => $("#"+k).value = "");
+  document.querySelectorAll("#causes input, input[name=lvl]").forEach(i => i.checked = false);
+  $("#f-confirm").checked = false; $("#staffFill").style.height = "0";
+  photos.forEach(p => URL.revokeObjectURL(p.url)); photos = []; renderThumbs(); updateDays(); $("#formMsg").hidden = true;
+}
+$("#resetBtn").addEventListener("click", resetForm);
+
+/* submit */
+$("#leaveForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const msg = $("#formMsg"), v = id => $("#"+id).value.trim();
+  const causes = [...document.querySelectorAll("#causes input:checked")].map(i => i.value);
+  const lvl = document.querySelector("input[name=lvl]:checked");
+  const missing = [];
+  if(!v("f-name")) missing.push("ชื่อ-นามสกุล");
+  if(!v("f-emp")) missing.push("รหัสพนักงาน");
+  if(!v("f-dept")) missing.push("แผนก");
+  if(!v("f-phone")) missing.push("เบอร์โทร");
+  if(!v("f-from") || !v("f-to")) missing.push("วันที่หยุดงาน");
+  else if(v("f-to") < v("f-from")) missing.push("วันที่สิ้นสุดต้องไม่ก่อนวันเริ่ม");
+  if(!causes.length) missing.push("สาเหตุ");
+  if(!v("f-detail")) missing.push("คำอธิบายสถานการณ์");
+  if(!v("f-area")) missing.push("พื้นที่ที่ประสบภัย");
+  if(!lvl) missing.push("ระดับน้ำ");
+  if(!photos.length) missing.push("รูปถ่ายอย่างน้อย 1 รูป");
+  if(!$("#f-confirm").checked) missing.push("การรับรองข้อมูล");
+  if(missing.length){ msg.textContent = "ยังขาด: " + missing.join(", "); msg.hidden = false; return; }
+
+  saveProfile();
+  const btn = $("#submitBtn"); btn.disabled = true; btn.textContent = "กำลังส่ง…";
+  $("#prog").hidden = false; const bar = $("#progBar"); bar.style.width = "3%"; msg.hidden = true;
+  const id = crypto.randomUUID(), code = refCode();
+  try{
+    const paths = [];
+    for(let i=0;i<photos.length;i++){
+      const path = `${id}/${i+1}.jpg`;
+      const { error } = await sb.storage.from(C.BUCKET).upload(path, photos[i].blob, {contentType:"image/jpeg", upsert:false});
+      if(error) throw {step:"upload", error};
+      paths.push(path);
+      bar.style.width = Math.round((i+1)/(photos.length+1)*100) + "%";
+    }
+    const row = {
+      id, ref_code: code, full_name: v("f-name"), emp_id: v("f-emp"), department: v("f-dept"), phone: v("f-phone"),
+      date_from: v("f-from"), date_to: v("f-to"), causes, detail: v("f-detail"), area: v("f-area"),
+      water_level: lvl.value, photo_paths: paths
+    };
+    const { error } = await sb.from(C.TABLE).insert(row);
+    if(error) throw {step:"insert", error};
+    bar.style.width = "100%";
+    const days = dayCount(row.date_from, row.date_to);
+    const recent = store.get("flood-leave-recent", []);
+    recent.unshift({ref: code, emp: row.emp_id, from: row.date_from, to: row.date_to, days, at: new Date().toISOString()});
+    store.set("flood-leave-recent", recent.slice(0, 20));
+    $("#rcCode").textContent = code;
+    $("#rcInfo").textContent = `${thDate(row.date_from)} – ${thDate(row.date_to)} · ${days} วัน · ${paths.length} รูป · สถานะ: รอตรวจสอบ`;
+    resetForm();
+    $("#leaveForm").hidden = true; $("#receipt").hidden = false;
+    window.scrollTo({top:0, behavior:"smooth"});
+  }catch(err){
+    console.error(err);
+    msg.textContent = err && err.step === "upload"
+      ? "อัปโหลดรูปไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่ ถ้ายังไม่ได้ ให้แจ้งฝ่ายบุคคล"
+      : "ส่งคำขอไม่สำเร็จ กรุณาลองใหม่อีกครั้ง ถ้ายังไม่ได้ ให้แจ้งฝ่ายบุคคล";
+    msg.hidden = false;
+  }finally{
+    btn.disabled = false; btn.textContent = "ส่งคำขอ"; setTimeout(() => $("#prog").hidden = true, 600);
+  }
+});
+$("#newReq").addEventListener("click", () => { $("#receipt").hidden = true; $("#leaveForm").hidden = false; });
+$("#copyCode").addEventListener("click", async () => {
+  try{ await navigator.clipboard.writeText($("#rcCode").textContent); $("#copyCode").textContent = "คัดลอกแล้ว"; }catch(e){}
+});
+
+/* status */
+async function lookup(ref, emp){
+  const { data, error } = await sb.rpc("check_leave_status", {p_ref: ref, p_emp_id: emp});
+  if(error) throw error;
+  return data && data[0];
+}
+function statusCard(r){
+  return `<div class="item"><div class="detail" style="border-top:0">
+    <div class="actions" style="justify-content:space-between"><strong>${esc(r.ref_code)}</strong><span class="pill ${esc(r.status)}">${STATUS[r.status] || esc(r.status)}</span></div>
+    <dl class="kv"><dt>วันที่หยุด</dt><dd>${thDate(r.date_from)} – ${thDate(r.date_to)} (${r.days} วัน)</dd>
+    ${r.review_note ? `<dt>หมายเหตุ HR</dt><dd>${esc(r.review_note)}</dd>` : ""}</dl></div></div>`;
+}
+$("#statusForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const out = $("#statusOut"), ref = $("#s-ref").value.trim(), emp = $("#s-emp").value.trim();
+  if(!ref || !emp){ out.innerHTML = `<div class="msg err">กรอกเลขคำขอและรหัสพนักงาน</div>`; return; }
+  out.innerHTML = `<div class="hint">กำลังค้นหา…</div>`;
+  try{
+    const r = await lookup(ref, emp);
+    out.innerHTML = r ? statusCard(r) : `<div class="msg err">ไม่พบคำขอ ตรวจสอบเลขคำขอและรหัสพนักงานอีกครั้ง</div>`;
+  }catch(err){ out.innerHTML = `<div class="msg err">เชื่อมต่อระบบไม่ได้ กรุณาลองใหม่</div>`; }
+});
+async function renderRecent(){
+  const recent = store.get("flood-leave-recent", []);
+  $("#recentWrap").hidden = !recent.length;
+  if(!recent.length) return;
+  $("#recentList").innerHTML = recent.map(r => `<div class="item" data-ref="${esc(r.ref)}"><div class="detail" style="border-top:0"><div class="actions" style="justify-content:space-between"><strong>${esc(r.ref)}</strong><span class="pill pending" data-pill>…</span></div><div class="hint">${thDate(r.from)} – ${thDate(r.to)} · ${r.days} วัน</div><div data-note></div></div></div>`).join("");
+  for(const r of recent){
+    try{
+      const s = await lookup(r.ref, r.emp);
+      const el = document.querySelector(`[data-ref="${CSS.escape(r.ref)}"]`); if(!el || !s) continue;
+      const pill = el.querySelector("[data-pill]"); pill.className = "pill " + s.status; pill.textContent = STATUS[s.status] || s.status;
+      if(s.review_note) el.querySelector("[data-note]").innerHTML = `<div class="hint">หมายเหตุ HR: ${esc(s.review_note)}</div>`;
+    }catch(e){}
+  }
+}
+})();
+</script>
+</body>
+</html>

@@ -2,27 +2,28 @@
 
 ระบบนี้เป็นเว็บแบบ static ใช้ Supabase เก็บข้อมูลและรูป แล้วนำขึ้นบน Vercel
 
-- `index.html`: หน้าแบบฟอร์มให้พนักงานกรอก พนักงานไม่ต้องล็อกอิน และตรวจสอบสถานะได้ด้วยเลขคำขอคู่กับรหัสพนักงาน
-- `admin.html`: หน้าสำหรับฝ่ายบุคคล ต้องล็อกอินก่อนจึงจะดูรายการ ดูรูป อนุมัติหรือไม่อนุมัติ และดาวน์โหลด CSV ได้
+- `index.html`: หน้าเดียวใช้ทั้งพนักงานและฝ่ายบุคคล
+  - พนักงานกรอกแบบฟอร์มได้เลย ไม่ต้องล็อกอิน
+  - ฝ่ายบุคคลกดลิงก์ "สำหรับฝ่ายบุคคล" ท้ายหน้า แล้วใส่รหัสผ่านเพื่อเข้าหลังบ้าน
 - `supabase/setup.sql`: สร้างตาราง สิทธิ์ (RLS) และ bucket สำหรับเก็บรูป
 
-## ตั้งค่าครั้งแรก
+## ตั้งค่าบัญชีหลังบ้าน (ครั้งเดียว)
 
-1. เข้า Supabase Dashboard แล้วไปที่ **SQL Editor** วางเนื้อหาไฟล์ `supabase/setup.sql` แล้วกด **Run**
-2. ไปที่ **Authentication → Users → Add user** เพื่อสร้างบัญชีให้เจ้าหน้าที่ HR โดยกำหนดอีเมลและรหัสผ่าน และติ๊ก Auto confirm
-3. กลับไปที่ SQL Editor แล้วรันคำสั่งนี้ โดยใส่อีเมลของ HR:
+1. เข้า Supabase ไปที่ **Authentication → Users → Add user → Create new user**
+   - Email: `hr-admin@flood-leave.app` (ต้องตรงกับ `HR_EMAIL` ใน `config.js`)
+   - Password: รหัสผ่านที่ต้องการใช้เข้าหลังบ้าน
+   - ติ๊ก **Auto Confirm User**
+2. ไปที่ SQL Editor แล้วรันคำสั่งนี้:
    ```sql
-   insert into public.hr_admins (email) values ('hr@yourcompany.com');
+   insert into public.hr_admins (email) values ('hr-admin@flood-leave.app');
    ```
-4. แนะนำให้ปิดการสมัครสมาชิกเอง ที่ **Authentication → Sign In / Providers → ปิด Allow new users to sign up**
+3. แนะนำให้ปิดการสมัครสมาชิกเอง ที่ **Authentication → Sign In / Providers → ปิด Allow new users to sign up**
 
-## นำขึ้น Vercel
-
-ไปที่ vercel.com/new แล้ว Import repository นี้ เลือก Framework Preset เป็น **Other** ไม่ต้องตั้ง build command แล้วกด Deploy
+ถ้าต้องการเปลี่ยนรหัสผ่าน ให้ไปที่ Authentication → Users แล้วเลือกบัญชีนี้ ไม่ต้องแก้โค้ด
 
 ## ความปลอดภัย
 
-anon key ใน `config.js` เป็นคีย์สาธารณะที่ออกแบบมาให้ใส่ในหน้าเว็บได้ ข้อมูลได้รับการป้องกันด้วย Row Level Security ดังนี้
+รหัสผ่านไม่ได้ฝังอยู่ในโค้ด Supabase เป็นผู้ตรวจสอบรหัสผ่าน ระบบป้องกันข้อมูลด้วย Row Level Security ดังนี้
 
 - คนทั่วไป: ส่งคำขอและอัปโหลดรูปได้เท่านั้น อ่านข้อมูลไม่ได้
-- อีเมลที่อยู่ในตาราง `hr_admins`: อ่านและแก้สถานะได้ ดูรูปได้ผ่านลิงก์ชั่วคราวที่มีอายุ 1 ชั่วโมง
+- บัญชีที่อยู่ในตาราง `hr_admins`: อ่านและแก้สถานะได้ ดูรูปได้ผ่านลิงก์ชั่วคราวที่มีอายุ 1 ชั่วโมง
